@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\TaskMasterPro.API\TaskMasterPro.API.csproj" />
+    <ProjectReference Include="..\..\backend\TaskMasterPro.API\TaskMasterPro.API.csproj" />
   </ItemGroup>
 
 </Project>

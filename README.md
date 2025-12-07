@@ -5,13 +5,13 @@ Full-stack TaskMaster Pro (Angular + Tailwind, dark mode, filters, Kanban) with 
 ## Run locally
 
 Backend:
-1. `cd src/TaskMasterPro.API`
+1. `cd backend/TaskMasterPro.API`
 2. Set env vars (override defaults): `CONNECTION_STRING`, `JWT_SECRET`, `CORS_ALLOWED_ORIGINS`, `USE_LOCALSTACK=true` (optional)
 3. `dotnet ef database update`
 4. `dotnet run`
 
 Frontend:
-1. `cd taskmasterpro_FE`
+1. `cd frontend`
 2. `npm install`
 3. `npm start`
 
