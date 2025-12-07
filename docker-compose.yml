@@ -1,0 +1,60 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: taskmaster-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: taskmasterdb
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: taskmaster-pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+
+  localstack:
+    image: localstack/localstack:latest
+    container_name: taskmaster-localstack
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=s3,sqs,sns
+      - DEBUG=1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=us-east-1
+    volumes:
+      - "./localstack:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+
+  localstack-init:
+    image: amazon/aws-cli
+    container_name: taskmaster-localstack-init
+    depends_on:
+      - localstack
+    entrypoint: >
+      /bin/sh -c "
+        echo 'Creating S3 bucket...' &&
+        aws --endpoint-url=http://localstack:4566 s3 mb s3://taskmaster-attachments &&
+        echo 'Creating SQS queue...' &&
+        aws --endpoint-url=http://localstack:4566 sqs create-queue --queue-name taskmaster-queue &&
+        echo 'Creating SNS topic...' &&
+        aws --endpoint-url=http://localstack:4566 sns create-topic --name taskmaster-topic &&
+        echo 'All AWS resources created.'
+      "
+
+volumes:
+  postgres_data:
