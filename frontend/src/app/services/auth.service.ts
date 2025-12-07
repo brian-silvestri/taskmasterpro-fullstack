@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap, of, map, catchError } from 'rxjs';
 import { LoginRequest, RegisterRequest, AuthResponse, ApiResponse } from '../models/auth.model';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:5132/api/auth';
+  private apiUrl = `${environment.apiUrl}/api/auth`;
   private currentUserSubject = new BehaviorSubject<AuthResponse['user'] | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
