@@ -13,6 +13,10 @@ using TaskMasterPro.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure port for Railway/Cloud deployment
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+
 // Configure Npgsql to use timestamp without timezone
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
@@ -187,11 +191,9 @@ if (app.Environment.IsDevelopment())
 }
 
 // Configure the HTTP request pipeline
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// Enable Swagger in all environments for testing (remove the if condition)
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseCors();
 app.UseMiddleware<TaskMasterPro.API.Middleware.ExceptionHandlingMiddleware>();
