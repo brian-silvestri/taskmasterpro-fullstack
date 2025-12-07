@@ -24,21 +24,18 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 var configuration = builder.Configuration;
 
 // Database Configuration
-var connectionString = Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING")  // ← CAMBIAR NOMBRE
+var connectionString = Environment.GetEnvironmentVariable("PGCONNSTRING")  
+    ?? Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING") 
     ?? Environment.GetEnvironmentVariable("CONNECTION_STRING") 
     ?? configuration.GetConnectionString("DefaultConnection")
     ?? "Host=localhost;Port=5432;Database=taskmasterdb;Username=postgres;Password=postgres";
 
-// DEBUG: Log connection string info
+// DEBUG
 Console.WriteLine($"=== CONNECTION STRING DEBUG ===");
+Console.WriteLine($"From PGCONNSTRING: {Environment.GetEnvironmentVariable("PGCONNSTRING") ?? "NULL"}");
 Console.WriteLine($"From DATABASE_CONNECTION_STRING: {Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING") ?? "NULL"}");
-Console.WriteLine($"From CONNECTION_STRING: {Environment.GetEnvironmentVariable("CONNECTION_STRING") ?? "NULL"}");
-Console.WriteLine($"Final value length: {connectionString?.Length ?? 0}");
-Console.WriteLine($"First 50 chars: {(connectionString?.Length > 50 ? connectionString.Substring(0, 50) : connectionString ?? "NULL")}");
+Console.WriteLine($"Final value: {connectionString}");
 Console.WriteLine($"================================");
-builder.Services.AddDbContext<TaskMasterDbContext>(options =>
-    options.UseNpgsql(connectionString));
-
 // AWS Services Configuration
 var useLocalStack = Environment.GetEnvironmentVariable("USE_LOCALSTACK") == "true";
 var awsEndpoint = Environment.GetEnvironmentVariable("AWS_ENDPOINT_URL") ?? "http://localhost:4566";
