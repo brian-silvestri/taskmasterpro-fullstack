@@ -2,7 +2,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copia TODO el backend (sin ..)
+# Copia TODO el backend
 COPY . .
 
 # Restauramos
@@ -10,7 +10,6 @@ RUN dotnet restore ./TaskMasterPro.API/TaskMasterPro.API.csproj
 
 # Build + Publish
 RUN dotnet publish ./TaskMasterPro.API/TaskMasterPro.API.csproj -c Release -o /app/publish
-
 
 # -------- RUNTIME --------
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
