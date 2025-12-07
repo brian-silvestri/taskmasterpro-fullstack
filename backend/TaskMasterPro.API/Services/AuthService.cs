@@ -31,14 +31,19 @@ public class AuthService : IAuthService
         }
 
         // Create new user
-        var user = new User
-        {
-            Email = request.Email,
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
-            FirstName = request.FirstName,
-            LastName = request.LastName,
-            IsActive = true
-        };
+       // Parse FullName into FirstName and LastName
+var nameParts = request.FullName.Trim().Split(' ', 2);
+var firstName = nameParts[0];
+var lastName = nameParts.Length > 1 ? nameParts[1] : nameParts[0];
+
+var user = new User
+{
+    Email = request.Email,
+    PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
+    FirstName = firstName,
+    LastName = lastName,
+    IsActive = true
+};
 
         var createdUser = await _userRepository.CreateAsync(user);
 

@@ -12,11 +12,8 @@ public class RegisterRequest
     [StringLength(100, MinimumLength = 6)]
     public string Password { get; set; } = string.Empty;
 
-    [Required]
-    [StringLength(60, MinimumLength = 2)]
-    public string FirstName { get; set; } = string.Empty;
-
-    [Required]
-    [StringLength(60, MinimumLength = 2)]
-    public string LastName { get; set; } = string.Empty;
+  
+  [Required]
+  [StringLength(120, MinimumLength = 2)]
+  public string FullName { get; set; } = string.Empty;
 }
