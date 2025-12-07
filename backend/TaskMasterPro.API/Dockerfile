@@ -1,17 +1,20 @@
-# Build stage
+# -------- BUILD --------
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-COPY . .
+# Copiamos TODO el backend
+COPY ../backend/ ./
 
-WORKDIR /src/backend/TaskMasterPro.API
-RUN dotnet restore
-RUN dotnet publish -c Release -o /app
+# Restauramos
+RUN dotnet restore TaskMasterPro.API/TaskMasterPro.API.csproj
 
-# Runtime stage
+# Build + Publish
+RUN dotnet publish TaskMasterPro.API/TaskMasterPro.API.csproj -c Release -o /app/publish
+
+# -------- RUNTIME --------
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
-COPY --from=build /app ./
+COPY --from=build /app/publish .
 
 EXPOSE 8080
 ENV ASPNETCORE_URLS=http://+:8080
