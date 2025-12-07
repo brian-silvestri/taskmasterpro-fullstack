@@ -179,7 +179,7 @@ import { ConfirmationModalComponent } from '../shared/confirmation-modal.compone
                   <p *ngIf="task.description" class="text-sm text-gray-600 dark:text-gray-400 mb-1">{{ task.description }}</p>
                   <div class="flex items-center space-x-3 text-xs text-gray-500 dark:text-gray-400">
                     <span *ngIf="task.dueDate" [class.text-red-600]="isOverdue(task.dueDate)" [class.dark:text-red-400]="isOverdue(task.dueDate)">
-                      {{ isOverdue(task.dueDate) ? 'Overdue' : 'Due' }}: {{ task.dueDate | date:'short' }}
+                      {{ isOverdue(task.dueDate) ? 'Overdue' : 'Due' }}: {{ task.dueDate | date:'dd/MM/yyyy' }}
                     </span>
                   </div>
                 </div>
@@ -206,7 +206,7 @@ import { ConfirmationModalComponent } from '../shared/confirmation-modal.compone
                 <div class="flex-1">
                   <h3 class="text-sm font-medium text-gray-900 dark:text-white">{{ task.title }}</h3>
                   <div class="flex items-center space-x-2 mt-1">
-                    <span class="text-xs text-gray-500 dark:text-gray-400">{{ task.dueDate | date:'medium' }}</span>
+                    <span class="text-xs text-gray-500 dark:text-gray-400">{{ task.dueDate | date:'dd/MM/yyyy' }}</span>
                     <span class="px-2 py-1 text-xs font-medium rounded-full" [ngClass]="getStatusBadgeClass(task.status)">
                       {{ getStatusLabel(task.status) }}
                     </span>
@@ -303,11 +303,11 @@ import { ConfirmationModalComponent } from '../shared/confirmation-modal.compone
               <div class="grid grid-cols-2 gap-4">
                 <div>
                   <h4 class="text-sm font-medium text-gray-500 dark:text-gray-300 mb-1">Created</h4>
-                  <p class="text-gray-900 dark:text-gray-200">{{ selectedTask?.createdAt | date:'medium' }}</p>
+                  <p class="text-gray-900 dark:text-gray-200">{{ selectedTask?.createdAt | date:'dd/MM/yyyy HH:mm' }}</p>
                 </div>
                 <div *ngIf="selectedTask?.dueDate">
                   <h4 class="text-sm font-medium text-gray-500 dark:text-gray-300 mb-1">Due Date</h4>
-                  <p class="text-gray-900 dark:text-gray-200">{{ selectedTask?.dueDate | date:'medium' }}</p>
+                  <p class="text-gray-900 dark:text-gray-200">{{ selectedTask?.dueDate | date:'dd/MM/yyyy' }}</p>
                 </div>
               </div>
             </div>

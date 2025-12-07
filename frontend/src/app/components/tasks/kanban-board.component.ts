@@ -146,7 +146,7 @@ interface KanbanColumn {
                       {{ task.description }}
                     </p>
                     <div class="flex items-center space-x-2 text-xs text-gray-500 dark:text-gray-400">
-                      <span *ngIf="task.dueDate">Due: {{ task.dueDate | date:'shortDate' }}</span>
+                      <span *ngIf="task.dueDate">Due: {{ task.dueDate | date:'dd/MM/yyyy' }}</span>
                       <span class="px-2 py-1 rounded-full font-medium" [ngClass]="getPriorityBadgeClass(task.priority)">
                         {{ getPriorityLabel(task.priority) }}
                       </span>

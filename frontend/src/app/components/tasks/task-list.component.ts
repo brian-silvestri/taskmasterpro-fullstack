@@ -293,7 +293,7 @@ import { ConfirmationModalComponent } from '../shared/confirmation-modal.compone
                 <p *ngIf="task.description" class="text-gray-600 dark:text-gray-400 mb-2">{{ task.description }}</p>
                 <div class="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
                   <span>Created: {{ task.createdAt | date:'short' }}</span>
-                  <span *ngIf="task.dueDate">Due: {{ task.dueDate | date:'short' }}</span>
+                  <span *ngIf="task.dueDate">Due: {{ task.dueDate | date:'dd/MM/yyyy' }}</span>
                 </div>
               </div>
               <div class="flex space-x-2 ml-4">
