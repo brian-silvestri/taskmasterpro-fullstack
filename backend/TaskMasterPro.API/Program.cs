@@ -28,6 +28,13 @@ var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING")
     ?? configuration.GetConnectionString("DefaultConnection")
     ?? "Host=localhost;Port=5432;Database=taskmasterdb;Username=postgres;Password=postgres";
 
+// DEBUG: Log connection string info
+Console.WriteLine($"=== CONNECTION STRING DEBUG ===");
+Console.WriteLine($"From ENV: {Environment.GetEnvironmentVariable("CONNECTION_STRING") ?? "NULL"}");
+Console.WriteLine($"Final value length: {connectionString?.Length ?? 0}");
+Console.WriteLine($"First 50 chars: {(connectionString?.Length > 50 ? connectionString.Substring(0, 50) : connectionString ?? "NULL")}");
+Console.WriteLine($"================================");
+
 builder.Services.AddDbContext<TaskMasterDbContext>(options =>
     options.UseNpgsql(connectionString));
 
@@ -166,27 +173,24 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Apply migrations automatically in development
-if (app.Environment.IsDevelopment())
+// Apply migrations automatically
+using (var scope = app.Services.CreateScope())
 {
-    using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<TaskMasterDbContext>();
     var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
     try
     {
+        logger.LogInformation("Checking database migrations...");
         if (db.Database.IsRelational())
         {
             db.Database.Migrate();
             logger.LogInformation("Database migrations applied successfully.");
         }
-        else
-        {
-            logger.LogInformation("Skipping migrations because the provider is not relational (likely InMemory for tests).");
-        }
     }
     catch (Exception ex)
     {
-        logger.LogError(ex, "An error occurred while migrating the database. Run 'dotnet ef database update' manually if needed.");
+        logger.LogError(ex, "An error occurred while migrating the database.");
+        throw;
     }
 }
 
