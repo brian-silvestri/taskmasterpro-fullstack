@@ -24,17 +24,18 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 var configuration = builder.Configuration;
 
 // Database Configuration
-var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING") 
+var connectionString = Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING")  // ← CAMBIAR NOMBRE
+    ?? Environment.GetEnvironmentVariable("CONNECTION_STRING") 
     ?? configuration.GetConnectionString("DefaultConnection")
     ?? "Host=localhost;Port=5432;Database=taskmasterdb;Username=postgres;Password=postgres";
 
 // DEBUG: Log connection string info
 Console.WriteLine($"=== CONNECTION STRING DEBUG ===");
-Console.WriteLine($"From ENV: {Environment.GetEnvironmentVariable("CONNECTION_STRING") ?? "NULL"}");
+Console.WriteLine($"From DATABASE_CONNECTION_STRING: {Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING") ?? "NULL"}");
+Console.WriteLine($"From CONNECTION_STRING: {Environment.GetEnvironmentVariable("CONNECTION_STRING") ?? "NULL"}");
 Console.WriteLine($"Final value length: {connectionString?.Length ?? 0}");
 Console.WriteLine($"First 50 chars: {(connectionString?.Length > 50 ? connectionString.Substring(0, 50) : connectionString ?? "NULL")}");
 Console.WriteLine($"================================");
-
 builder.Services.AddDbContext<TaskMasterDbContext>(options =>
     options.UseNpgsql(connectionString));
 
