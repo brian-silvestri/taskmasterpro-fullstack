@@ -1,4 +1,4 @@
 export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:5132'
+  production: true,
+  apiUrl: 'https://triumphant-adventure-production-4d3a.up.railway.app'
 };
