@@ -414,10 +414,10 @@ export class DashboardComponent implements OnInit {
 
   // Get overdue tasks
   get overdueTasks(): TaskResponse[] {
-    const now = new Date();
+    const today = this.todayDateOnly();
     return this.tasks.filter(t =>
       t.dueDate &&
-      new Date(t.dueDate) < now &&
+      this.toDateOnly(t.dueDate) < today &&
       t.status !== TaskStatus.Completed &&
       t.status !== TaskStatus.Cancelled
     );
@@ -425,19 +425,19 @@ export class DashboardComponent implements OnInit {
 
   // Get tasks due soon (within 3 days)
   get dueSoonTasks(): TaskResponse[] {
-    const now = new Date();
-    const threeDaysFromNow = new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000);
+    const today = this.todayDateOnly();
+    const threeDaysFromNow = new Date(today.getTime() + 3 * 24 * 60 * 60 * 1000);
     return this.tasks.filter(t =>
       t.dueDate &&
-      new Date(t.dueDate) >= now &&
-      new Date(t.dueDate) <= threeDaysFromNow &&
+      this.toDateOnly(t.dueDate) >= today &&
+      this.toDateOnly(t.dueDate) <= threeDaysFromNow &&
       t.status !== TaskStatus.Completed &&
       t.status !== TaskStatus.Cancelled
     );
   }
 
   isOverdue(dueDate: string): boolean {
-    return new Date(dueDate) < new Date();
+    return this.toDateOnly(dueDate) < this.todayDateOnly();
   }
 
   getTaskCountByStatus(status: TaskStatus): number {
@@ -515,5 +515,22 @@ export class DashboardComponent implements OnInit {
 
   logout(): void {
     this.authService.logout();
+  }
+
+  private todayDateOnly(): Date {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    // Date-only comparison avoids timezone offsets marking future dates as overdue
+  }
+
+  private toDateOnly(dateString: string): Date {
+    const d = new Date(dateString);
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  }
+
+  get displayName(): string {
+    const raw = this.currentUser?.fullName?.trim() || this.currentUser?.email?.split('@')[0] || 'User';
+    const first = raw.split(' ')[0];
+    return first.charAt(0).toUpperCase() + first.slice(1);
   }
 }

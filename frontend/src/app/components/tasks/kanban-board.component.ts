@@ -336,15 +336,9 @@ export class KanbanBoardComponent implements OnInit {
   }
 
   get displayName(): string {
-    const name = this.currentUser?.fullName?.trim();
-    if (name) {
-      return name;
-    }
-    const email = this.currentUser?.email;
-    if (email) {
-      return email.split('@')[0];
-    }
-    return 'User';
+    const raw = this.currentUser?.fullName?.trim() || this.currentUser?.email?.split('@')[0] || 'User';
+    const first = raw.split(' ')[0];
+    return first.charAt(0).toUpperCase() + first.slice(1);
   }
 
   trackByTaskId(_: number, task: TaskResponse): string {
