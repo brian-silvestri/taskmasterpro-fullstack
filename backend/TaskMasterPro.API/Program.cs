@@ -36,6 +36,11 @@ Console.WriteLine($"From PGCONNSTRING: {Environment.GetEnvironmentVariable("PGCO
 Console.WriteLine($"From DATABASE_CONNECTION_STRING: {Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING") ?? "NULL"}");
 Console.WriteLine($"Final value: {connectionString}");
 Console.WriteLine($"================================");
+
+// REGISTER DB CONTEXT - ESTO FALTABA
+builder.Services.AddDbContext<TaskMasterDbContext>(options =>
+    options.UseNpgsql(connectionString));
+
 // AWS Services Configuration
 var useLocalStack = Environment.GetEnvironmentVariable("USE_LOCALSTACK") == "true";
 var awsEndpoint = Environment.GetEnvironmentVariable("AWS_ENDPOINT_URL") ?? "http://localhost:4566";
@@ -193,7 +198,6 @@ using (var scope = app.Services.CreateScope())
 }
 
 // Configure the HTTP request pipeline
-// Enable Swagger in all environments for testing (remove the if condition)
 app.UseSwagger();
 app.UseSwaggerUI();
 
