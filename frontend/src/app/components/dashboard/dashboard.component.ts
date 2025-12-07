@@ -390,12 +390,6 @@ export class DashboardComponent implements OnInit {
     );
   }
 
-  get displayName(): string {
-    const raw = this.currentUser?.fullName?.trim() || this.currentUser?.email?.split('@')[0] || 'User';
-    const first = raw.split(' ')[0];
-    return first.charAt(0).toUpperCase() + first.slice(1);
-  }
-
   // Get today's focus - high/critical priority tasks that are pending or in progress
   get todaysFocus(): TaskResponse[] {
     return this.tasks
