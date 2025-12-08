@@ -19,10 +19,10 @@ interface KanbanColumn {
   standalone: true,
   imports: [CommonModule, RouterLink, RouterLinkActive, LayoutHeaderComponent, LayoutFooterComponent],
   template: `
-    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200 overflow-x-hidden">
+    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200 overflow-x-hidden flex flex-col">
       <app-layout-header [displayName]="displayName" (logout)="logout()"></app-layout-header>
 
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+      <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
           <div>
             <p class="text-sm text-blue-600 dark:text-blue-400 font-semibold">Kanban Board</p>
@@ -127,7 +127,7 @@ interface KanbanColumn {
             </div>
           </div>
         </div>
-      </div>
+      </main>
       <app-layout-footer></app-layout-footer>
     </div>
   `
