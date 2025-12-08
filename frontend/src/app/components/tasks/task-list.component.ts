@@ -4,78 +4,22 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, RouterLinkActive, Router, ActivatedRoute } from '@angular/router';
 import { TaskService } from '../../services/task.service';
 import { AuthService } from '../../services/auth.service';
-import { ThemeService } from '../../services/theme.service';
 import { TaskResponse, TaskStatus, TaskPriority } from '../../models/task.model';
 import { ConfirmationModalComponent } from '../shared/confirmation-modal.component';
+import { LayoutHeaderComponent } from '../shared/layout-header.component';
+import { LayoutFooterComponent } from '../shared/layout-footer.component';
 
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, RouterLinkActive, ConfirmationModalComponent],
+  imports: [CommonModule, FormsModule, RouterModule, RouterLinkActive, ConfirmationModalComponent, LayoutHeaderComponent, LayoutFooterComponent],
   template: `
-    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
-      <!-- Header -->
-      <nav class="bg-white dark:bg-gray-800 shadow-sm transition-colors duration-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="flex justify-between h-16">
-            <div class="flex items-center space-x-8">
-              <h1 class="text-2xl font-bold text-gray-900 dark:text-white">TaskMaster Pro</h1>
-              <div class="flex space-x-4">
-                <a
-                  routerLink="/dashboard"
-                  routerLinkActive="bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-400"
-                  [routerLinkActiveOptions]="{exact: false}"
-                  class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                >
-                  Dashboard
-                </a>
-                <a
-                  routerLink="/tasks"
-                  routerLinkActive="bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-400"
-                  [routerLinkActiveOptions]="{exact: false}"
-                  class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                >
-                  All Tasks
-                </a>
-                <a
-                  routerLink="/kanban"
-                  routerLinkActive="bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-400"
-                  [routerLinkActiveOptions]="{exact: false}"
-                  class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                >
-                  Kanban
-                </a>
-              </div>
-            </div>
-            <div class="flex items-center space-x-4">
-              <!-- Dark Mode Toggle -->
-              <button
-                (click)="themeService.toggleDarkMode()"
-                class="p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                title="Toggle dark mode"
-              >
-                <svg *ngIf="!themeService.isDarkMode()" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                </svg>
-                <svg *ngIf="themeService.isDarkMode()" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>
-              </button>
-              <span class="text-gray-700 dark:text-gray-300">Hello, {{ displayName }}!</span>
-              <button
-                (click)="logout()"
-                class="px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
+    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200 overflow-x-hidden flex flex-col">
+      <app-layout-header [displayName]="displayName" (logout)="logout()"></app-layout-header>
 
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
         <!-- Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
           <button
             (click)="selectedStatus = null; filterTasks()"
             [class.ring-2]="selectedStatus === null"
@@ -223,11 +167,11 @@ import { ConfirmationModalComponent } from '../shared/confirmation-modal.compone
           </div>
 
           <!-- Filter Actions -->
-          <div class="flex justify-between items-center">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
             <div class="text-sm text-gray-600 dark:text-gray-400">
               Showing {{ filteredTasks.length }} of {{ tasks.length }} tasks
             </div>
-            <div class="flex space-x-2">
+            <div class="flex flex-wrap gap-2">
               <button
                 *ngIf="searchTerm || selectedStatus !== null || selectedPriority !== null"
                 (click)="clearFilters()"
@@ -279,9 +223,9 @@ import { ConfirmationModalComponent } from '../shared/confirmation-modal.compone
         <!-- Tasks List -->
         <div *ngIf="!loading && filteredTasks.length > 0" class="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900/50">
           <div *ngFor="let task of filteredTasks" class="p-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-            <div class="flex items-start justify-between">
-              <div class="flex-1">
-                <div class="flex items-center space-x-3 mb-2">
+            <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-3">
+              <div class="flex-1 min-w-0">
+                <div class="flex flex-wrap items-center gap-2 mb-2">
                   <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ task.title }}</h3>
                   <span class="px-2 py-1 text-xs font-medium rounded-full" [ngClass]="getStatusBadgeClass(task.status)">
                     {{ getStatusLabel(task.status) }}
@@ -291,12 +235,12 @@ import { ConfirmationModalComponent } from '../shared/confirmation-modal.compone
                   </span>
                 </div>
                 <p *ngIf="task.description" class="text-gray-600 dark:text-gray-400 mb-2">{{ task.description }}</p>
-                <div class="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
+                <div class="flex flex-wrap items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
                   <span>Created: {{ task.createdAt | date:'short' }}</span>
                   <span *ngIf="task.dueDate">Due: {{ task.dueDate | date:'dd/MM/yyyy' }}</span>
                 </div>
               </div>
-              <div class="flex space-x-2 ml-4">
+              <div class="flex flex-wrap gap-2 md:ml-4">
                 <button
                   (click)="editTask(task.id)"
                   class="px-3 py-1 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition-colors"
@@ -313,7 +257,9 @@ import { ConfirmationModalComponent } from '../shared/confirmation-modal.compone
             </div>
           </div>
         </div>
-      </div>
+      </main>
+
+      <app-layout-footer></app-layout-footer>
     </div>
 
     <app-confirmation-modal
@@ -346,8 +292,7 @@ export class TaskListComponent implements OnInit {
     private taskService: TaskService,
     private authService: AuthService,
     private router: Router,
-    private route: ActivatedRoute,
-    public themeService: ThemeService
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {

@@ -3,8 +3,9 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { TaskService } from '../../services/task.service';
 import { AuthService } from '../../services/auth.service';
-import { ThemeService } from '../../services/theme.service';
 import { TaskPriority, TaskResponse, TaskStatus } from '../../models/task.model';
+import { LayoutHeaderComponent } from '../shared/layout-header.component';
+import { LayoutFooterComponent } from '../shared/layout-footer.component';
 
 interface KanbanColumn {
   key: TaskStatus;
@@ -16,72 +17,19 @@ interface KanbanColumn {
 @Component({
   selector: 'app-kanban-board',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, RouterLink, RouterLinkActive, LayoutHeaderComponent, LayoutFooterComponent],
   template: `
-    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
-      <!-- Header -->
-      <nav class="bg-white dark:bg-gray-800 shadow-sm transition-colors duration-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="flex justify-between h-16">
-            <div class="flex items-center space-x-8">
-              <h1 class="text-2xl font-bold text-gray-900 dark:text-white">TaskMaster Pro</h1>
-              <div class="flex space-x-4">
-                <a
-                  routerLink="/dashboard"
-                  routerLinkActive="bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-400"
-                  class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                >
-                  Dashboard
-                </a>
-                <a
-                  routerLink="/tasks"
-                  routerLinkActive="bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-400"
-                  class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                >
-                  All Tasks
-                </a>
-                <a
-                  routerLink="/kanban"
-                  routerLinkActive="bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-400"
-                  class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                >
-                  Kanban
-                </a>
-              </div>
-            </div>
-            <div class="flex items-center space-x-4">
-              <button
-                (click)="themeService.toggleDarkMode()"
-                class="p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                title="Toggle dark mode"
-              >
-                <svg *ngIf="!themeService.isDarkMode()" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                </svg>
-                <svg *ngIf="themeService.isDarkMode()" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>
-              </button>
-              <span class="text-gray-700 dark:text-gray-300">Hello, {{ displayName }}!</span>
-              <button
-                (click)="logout()"
-                class="px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
+    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200 overflow-x-hidden">
+      <app-layout-header [displayName]="displayName" (logout)="logout()"></app-layout-header>
 
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
           <div>
             <p class="text-sm text-blue-600 dark:text-blue-400 font-semibold">Kanban Board</p>
             <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Drag tasks across statuses</h2>
             <p class="text-sm text-gray-600 dark:text-gray-400">Drop cards to update status instantly.</p>
           </div>
-          <div class="flex items-center space-x-3">
+          <div class="flex flex-col sm:flex-row sm:items-center gap-3 w-full sm:w-auto">
             <button
               (click)="loadTasks()"
               class="px-4 py-2 text-sm text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors"
@@ -105,7 +53,7 @@ interface KanbanColumn {
           Loading board...
         </div>
 
-        <div *ngIf="!loading" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div *ngIf="!loading" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
           <div
             *ngFor="let column of columns"
             class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow dark:shadow-gray-900/50 flex flex-col transition-colors"
@@ -180,6 +128,7 @@ interface KanbanColumn {
           </div>
         </div>
       </div>
+      <app-layout-footer></app-layout-footer>
     </div>
   `
 })
@@ -202,8 +151,7 @@ export class KanbanBoardComponent implements OnInit {
   constructor(
     private taskService: TaskService,
     private authService: AuthService,
-    private router: Router,
-    public themeService: ThemeService
+    private router: Router
   ) {}
 
   ngOnInit(): void {

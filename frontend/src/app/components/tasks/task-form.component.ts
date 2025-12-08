@@ -5,11 +5,14 @@ import { Router, ActivatedRoute, RouterModule, RouterLinkActive } from '@angular
 import { TaskService } from '../../services/task.service';
 import { TaskPriority, CreateTaskRequest, UpdateTaskRequest } from '../../models/task.model';
 import { ThemeService } from '../../services/theme.service';
+import { AuthService } from '../../services/auth.service';
+import { LayoutHeaderComponent } from '../shared/layout-header.component';
+import { LayoutFooterComponent } from '../shared/layout-footer.component';
 
 @Component({
   selector: 'app-task-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, RouterLinkActive],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, RouterLinkActive, LayoutHeaderComponent, LayoutFooterComponent],
   templateUrl: './task-form.component.html'
 })
 export class TaskFormComponent implements OnInit {
@@ -20,13 +23,15 @@ export class TaskFormComponent implements OnInit {
   isEditMode = false;
   taskId: string | null = null;
   TaskPriority = TaskPriority;
+  currentUser: any;
 
   constructor(
     private fb: FormBuilder,
     private taskService: TaskService,
     private router: Router,
     private route: ActivatedRoute,
-    public themeService: ThemeService
+    public themeService: ThemeService,
+    private authService: AuthService
   ) {
     this.taskForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3)]],
@@ -38,6 +43,10 @@ export class TaskFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.currentUser = this.authService.getCurrentUser();
+    this.authService.loadCurrentUser().subscribe(user => {
+      this.currentUser = user;
+    });
     this.taskId = this.route.snapshot.paramMap.get('id');
     if (this.taskId) {
       this.isEditMode = true;
@@ -127,5 +136,16 @@ export class TaskFormComponent implements OnInit {
 
   onCancel(): void {
     this.router.navigate(['/tasks']);
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
+
+  get displayName(): string {
+    const raw = this.currentUser?.fullName?.trim() || this.currentUser?.email?.split('@')[0] || 'User';
+    const first = raw.split(' ')[0];
+    return first.charAt(0).toUpperCase() + first.slice(1);
   }
 }
