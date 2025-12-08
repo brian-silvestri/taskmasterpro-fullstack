@@ -62,7 +62,15 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return !!this.getToken();
+    const token = this.getToken();
+    if (!token) {
+      return false;
+    }
+    if (this.isTokenExpired(token)) {
+      this.logout();
+      return false;
+    }
+    return true;
   }
 
   getCurrentUser() {
@@ -88,5 +96,20 @@ export class AuthService {
       }),
       catchError(() => of(null))
     );
+  }
+
+  private isTokenExpired(token: string): boolean {
+    try {
+      const payload = token.split('.')[1];
+      const decoded = JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
+      if (!decoded?.exp) {
+        return false;
+      }
+      const nowSeconds = Math.floor(Date.now() / 1000);
+      return decoded.exp < nowSeconds;
+    } catch {
+      // If decode fails, treat as expired to force a fresh login
+      return true;
+    }
   }
 }
