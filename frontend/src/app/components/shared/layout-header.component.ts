@@ -10,7 +10,7 @@ import { ThemeService } from '../../services/theme.service';
   template: `
     <nav class="bg-gray-900 text-white shadow-sm transition-colors duration-200">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-3 py-3 md:py-0 w-full">
+        <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-3 py-3 sm:py-4 md:py-4 w-full min-h-[68px]">
           <div class="flex flex-wrap items-center gap-3 md:gap-6 w-full md:w-auto">
             <h1 class="text-2xl font-bold text-white">TaskMaster Pro</h1>
             <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
