@@ -1,28 +1,41 @@
-# taskmasterpro-fullstack
+# TaskMasterPro – Full Stack Task Management Platform
 
-Full-stack TaskMaster Pro (Angular + Tailwind, dark mode, filters, Kanban) with .NET 8 API (JWT, EF Core, global error middleware). Includes tests, example configs, zero-cost deploy path (Vercel frontend, Railway API + Postgres), optional AWS Lambda + API GW demo, IaC refs, and CI-ready (lint/build/test).
+TaskMasterPro is a full-stack task management application built from scratch to demonstrate real-world backend and frontend architecture, authentication, testing, and deployment workflows.
 
-## Run locally
+The project focuses on building a production-style application using modern technologies and best practices, including API design, security, and CI-ready setups.
 
-Backend:
-1. `cd backend/TaskMasterPro.API`
-2. Set env vars (override defaults): `CONNECTION_STRING`, `JWT_SECRET`, `CORS_ALLOWED_ORIGINS`, `USE_LOCALSTACK=true` (optional)
-3. `dotnet ef database update`
-4. `dotnet run`
+---
 
-Frontend:
-1. `cd frontend`
-2. `npm install`
-3. `npm start`
+## Tech Stack & Features
 
-## Config
-- Copy `src/TaskMasterPro.API/appsettings.example.json` → `appsettings.json` and adjust for local dev.
-- Prefer env vars in production (connection string, JWT secret, AWS, CORS).
+**Frontend**
+- Angular + Tailwind CSS
+- Dark mode
+- Filters and Kanban-style task management
 
-## Tests / lint
-- Backend: `cd tests/TaskMasterPro.Tests && dotnet test`
-- Frontend: `cd taskmasterpro_FE && npm run test` / `npm run build`
+**Backend**
+- .NET 8 REST API
+- JWT-based authentication
+- Entity Framework Core
+- Global error handling middleware
 
-## Notes
-- Dev env auto-applies EF migrations on startup (only if relational provider).
-- API docs at `/swagger` in Development.
+**Database**
+- PostgreSQL (Railway) / SQL Server (local)
+
+**Testing & Quality**
+- Backend unit tests
+- CI-ready (lint / build / test)
+
+**Deployment**
+- Frontend: Vercel
+- Backend & Database: Railway (zero-cost path)
+- Optional demo: AWS Lambda + API Gateway
+- Infrastructure references (IaC)
+
+---
+
+## Run Locally
+
+### Backend
+```bash
+cd backend/TaskMasterPro.API
