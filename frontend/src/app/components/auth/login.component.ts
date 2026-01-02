@@ -9,20 +9,20 @@ import { AuthService } from '../../services/auth.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   template: `
-    <div class="min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center p-4">
+    <div class="min-h-screen bg-amber-50 flex items-center justify-center p-4">
       <div class="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
         <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">TaskMaster Pro</h2>
-        
+
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-            <input 
-              type="email" 
+            <input
+              type="email"
               formControlName="email"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-transparent"
               placeholder="you@example.com"
             />
-            <p *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" 
+            <p *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
                class="text-red-500 text-sm mt-1">
               Email is required
             </p>
@@ -30,13 +30,13 @@ import { AuthService } from '../../services/auth.service';
 
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
-            <input 
-              type="password" 
+            <input
+              type="password"
               formControlName="password"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-transparent"
               placeholder="••••••••"
             />
-            <p *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" 
+            <p *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
                class="text-red-500 text-sm mt-1">
               Password is required
             </p>
@@ -46,18 +46,18 @@ import { AuthService } from '../../services/auth.service';
             {{ errorMessage }}
           </div>
 
-          <button 
+          <button
             type="submit"
             [disabled]="loginForm.invalid || loading"
-            class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            class="w-full bg-amber-500 text-white py-2 rounded-lg hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {{ loading ? 'Signing in...' : 'Sign In' }}
           </button>
         </form>
 
         <p class="text-center text-gray-600 mt-6">
-          Don't have an account? 
-          <a routerLink="/register" class="text-blue-600 hover:underline">Register</a>
+          Don't have an account?
+          <a routerLink="/register" class="text-amber-600 hover:text-amber-700">Register</a>
         </p>
       </div>
     </div>
